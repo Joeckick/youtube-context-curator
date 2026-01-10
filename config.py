@@ -12,7 +12,9 @@ from pathlib import Path
 import yaml
 from dotenv import load_dotenv
 
-load_dotenv()
+# Override=True ensures .env values take precedence over existing environment variables.
+# This prevents confusion when users have empty env vars set in their shell.
+load_dotenv(override=True)
 
 
 @dataclass(frozen=True)
