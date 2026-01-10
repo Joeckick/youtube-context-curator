@@ -42,7 +42,9 @@ def copy_if_missing(src: str, dest: str, description: str) -> bool:
     return True
 
 
-def prompt_for_key(name: str, description: str, signup_url: str, prefix: str = "") -> str:
+def prompt_for_key(
+    name: str, description: str, signup_url: str, prefix: str = ""
+) -> str:
     """Prompt user for an API key with helpful context."""
     print(f"\n  {name}")
     print(f"  {description}")
@@ -55,7 +57,9 @@ def prompt_for_key(name: str, description: str, signup_url: str, prefix: str = "
         if not value:
             return ""
         if prefix and not value.startswith(prefix):
-            print(f"  Warning: Expected key to start with '{prefix}'. Try again or press Enter to skip.")
+            print(
+                f"  Warning: Expected key to start with '{prefix}'. Try again or press Enter to skip."
+            )
             continue
         return value
 
@@ -81,33 +85,37 @@ def setup_env_file() -> dict:
     # AI Provider (need at least one)
     print("\n  --- AI Provider (need at least one) ---")
 
-    if not values.get("ANTHROPIC_API_KEY") or values.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-api..."):
+    if not values.get("ANTHROPIC_API_KEY") or values.get(
+        "ANTHROPIC_API_KEY", ""
+    ).startswith("sk-ant-api..."):
         key = prompt_for_key(
             "ANTHROPIC_API_KEY",
             "Claude API for video analysis (recommended)",
             "https://console.anthropic.com",
-            "sk-ant-"
+            "sk-ant-",
         )
         if key:
             values["ANTHROPIC_API_KEY"] = key
     else:
-        print(f"\n  ANTHROPIC_API_KEY: ✓ Already configured")
+        print("\n  ANTHROPIC_API_KEY: ✓ Already configured")
 
     if not values.get("OPENAI_API_KEY") or values.get("OPENAI_API_KEY", "") == "":
         key = prompt_for_key(
             "OPENAI_API_KEY",
             "OpenAI API (alternative to Anthropic)",
             "https://platform.openai.com",
-            "sk-"
+            "sk-",
         )
         if key:
             values["OPENAI_API_KEY"] = key
     else:
-        print(f"\n  OPENAI_API_KEY: ✓ Already configured")
+        print("\n  OPENAI_API_KEY: ✓ Already configured")
 
     # Supadata
     print("\n  --- Transcript API ---")
-    if not values.get("SUPADATA_API_KEY") or values.get("SUPADATA_API_KEY", "").startswith("your-"):
+    if not values.get("SUPADATA_API_KEY") or values.get(
+        "SUPADATA_API_KEY", ""
+    ).startswith("your-"):
         key = prompt_for_key(
             "SUPADATA_API_KEY",
             "For fetching YouTube transcripts (free tier: 200/month)",
@@ -116,26 +124,31 @@ def setup_env_file() -> dict:
         if key:
             values["SUPADATA_API_KEY"] = key
     else:
-        print(f"\n  SUPADATA_API_KEY: ✓ Already configured")
+        print("\n  SUPADATA_API_KEY: ✓ Already configured")
 
     # Email
     print("\n  --- Email (via Resend) ---")
-    if not values.get("RESEND_API_KEY") or values.get("RESEND_API_KEY", "").startswith("re_..."):
+    if not values.get("RESEND_API_KEY") or values.get("RESEND_API_KEY", "").startswith(
+        "re_..."
+    ):
         key = prompt_for_key(
             "RESEND_API_KEY",
             "For sending digest emails (free tier: 3,000/month)",
             "https://resend.com",
-            "re_"
+            "re_",
         )
         if key:
             values["RESEND_API_KEY"] = key
     else:
-        print(f"\n  RESEND_API_KEY: ✓ Already configured")
+        print("\n  RESEND_API_KEY: ✓ Already configured")
 
-    if not values.get("EMAIL_TO") or values.get("EMAIL_TO", "") == "your.email@example.com":
-        print(f"\n  EMAIL_TO")
-        print(f"  Where to send your daily digest")
-        email = input(f"  Enter your email address: ").strip()
+    if (
+        not values.get("EMAIL_TO")
+        or values.get("EMAIL_TO", "") == "your.email@example.com"
+    ):
+        print("\n  EMAIL_TO")
+        print("  Where to send your daily digest")
+        email = input("  Enter your email address: ").strip()
         if email:
             values["EMAIL_TO"] = email
     else:
@@ -172,7 +185,9 @@ def validate_setup() -> list[str]:
 
     # Check context.md
     if not Path("context.md").exists():
-        issues.append("context.md not created - copy context.example.md and add your details")
+        issues.append(
+            "context.md not created - copy context.example.md and add your details"
+        )
 
     # Check .env
     if not Path(".env").exists():
@@ -192,12 +207,16 @@ def validate_setup() -> list[str]:
     has_anthropic = values.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-")
     has_openai = values.get("OPENAI_API_KEY", "").startswith("sk-")
     if not has_anthropic and not has_openai:
-        issues.append("No AI API key configured - need ANTHROPIC_API_KEY or OPENAI_API_KEY")
+        issues.append(
+            "No AI API key configured - need ANTHROPIC_API_KEY or OPENAI_API_KEY"
+        )
 
     if not values.get("SUPADATA_API_KEY"):
         issues.append("SUPADATA_API_KEY not set - needed for transcripts")
 
-    if not values.get("RESEND_API_KEY") or not values.get("RESEND_API_KEY", "").startswith("re_"):
+    if not values.get("RESEND_API_KEY") or not values.get(
+        "RESEND_API_KEY", ""
+    ).startswith("re_"):
         issues.append("RESEND_API_KEY not set - needed for email delivery")
 
     if not values.get("EMAIL_TO") or values.get("EMAIL_TO") == "your.email@example.com":
@@ -249,8 +268,12 @@ def main():
         with open("context.md") as f:
             content = f.read()
         if "[e.g." in content or "delete this section" in content.lower():
-            print("1. Edit context.md with YOUR details (this is the most important step!)")
-            print("   The example content is still there - replace it with your situation.\n")
+            print(
+                "1. Edit context.md with YOUR details (this is the most important step!)"
+            )
+            print(
+                "   The example content is still there - replace it with your situation.\n"
+            )
 
     print("2. Test your setup:")
     print("   python main.py --demo      # Test with sample data (just needs AI key)")
