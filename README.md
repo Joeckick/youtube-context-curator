@@ -6,9 +6,15 @@ You're a Product Manager who subscribes to Lenny's Podcast, The Product Podcast,
 
 Or an Engineer who's trying to stay on top of all the latest developments with AI, and which ones you should / shouldn't employ.
 
-You know there's content in there that could help you work better, stay current, or get to the next level. You just don't know which specific videos, when they're pushing out 3 a week.
+You know there's content in there that could help you work better, stay current, or get to the next level. You just don't know which specific videos, when each of the channels is pushing out 3 a week.
 
-This isn't a summariser. It's a filter that finds what's relevant and a translator that turns generic advice into specific action.
+**What is it**
+
+This isn't a youtube summariser. There's hundreds of those.
+
+This tool is a a filter that finds what's relevant and a translator that turns generic advice into specific action.
+
+It monitors your channels and sends a daily email rating each video against your context, so you know what to watch and what to skip.
 
 ![Example digest email](screenshot.png)
 
