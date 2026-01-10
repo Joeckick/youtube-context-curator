@@ -1,4 +1,4 @@
-# YouTube Daily Curator
+# YouTube Daily Context Curator
 
 ## Overview
 
