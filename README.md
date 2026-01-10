@@ -16,7 +16,17 @@ This tool is a filter that finds what's relevant and a translator that turns gen
 
 It monitors your channels and sends a daily email rating each video against your context, so you know what to watch and what to skip.
 
-![Example digest email](screenshot.png)
+### High relevance videos get personalised insights
+
+![High relevance example - Impact-First Product Teams](assets/high-relevance-1.png)
+
+![High relevance example - Molly Graham on career growth](assets/high-relevance-2.png)
+
+### Skip ratings explain *why* content doesn't fit your context
+
+![Skip example - engineering-focused content](assets/skip-1.png)
+
+![Skip example - B2C consumer product thinking](assets/skip-2.png)
 
 ## Why I built this
 
