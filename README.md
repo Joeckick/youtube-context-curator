@@ -103,22 +103,23 @@ If both keys are set, Anthropic is used by default. Override with `AI_PROVIDER=o
 
 ### 3. Choose your channels
 
-Edit `config.py` to add/remove channels:
+Edit `channels.yml` to add/remove channels:
 
-```python
-CHANNELS = [
-    Channel(
-        name="Lenny's Podcast",
-        channel_id="UC6t1O76G0jYXOAoYCm153dA"
-    ),
-    # Add your own...
-]
+```yaml
+channels:
+  - name: "Lenny's Podcast"
+    id: UC6t1O76G0jYXOAoYCm153dA
+
+  - name: "My Favourite Channel"
+    id: UCxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 To find a channel ID:
 1. Go to the channel page on YouTube
 2. View page source (Ctrl+U / Cmd+U)
 3. Search for `channel_id` - you'll find `"channel_id":"UC..."`
+
+Or use: https://commentpicker.com/youtube-channel-id.php
 
 ## Running
 

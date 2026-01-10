@@ -9,6 +9,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from dotenv import load_dotenv
+import yaml
 
 load_dotenv()
 
@@ -25,33 +26,50 @@ class Channel:
 
 
 # YouTube channels to monitor
-# To find a channel ID: view page source on channel page, search for "channel_id"
-CHANNELS = [
-    Channel(
-        name="Lenny's Podcast",
-        channel_id="UC6t1O76G0jYXOAoYCm153dA"
-    ),
-    Channel(
-        name="SVPG - Marty Cagan",
-        channel_id="UCub3-8xH-nLcp-EeV2htn7w"
-    ),
-    Channel(
-        name="Aakash Gupta - Product Growth",
-        channel_id="UCsHBhXybRz2CCfpU0hWp7ow"
-    ),
-    Channel(
-        name="Greg Isenberg",
-        channel_id="UCPjNBjflYl0-HQtUvOx0Ibw"
-    ),
-    Channel(
-        name="Pragmatic Engineer",
-        channel_id="UCPbwhExawYrn9xxI21TFfyw"
-    ),
-    Channel(
-        name="Mind the Product",
-        channel_id="UCiT1BmYvOBsEvU9iw0076Sw"
-    ),
-]
+# Edit channels.yml to add/remove channels (or fall back to defaults below)
+def load_channels() -> list[Channel]:
+    """Load channels from channels.yml, falling back to defaults if not found."""
+    channels_path = Path(__file__).parent / "channels.yml"
+
+    if channels_path.exists():
+        with open(channels_path) as f:
+            data = yaml.safe_load(f)
+
+        if data and "channels" in data:
+            return [
+                Channel(name=ch["name"], channel_id=ch["id"])
+                for ch in data["channels"]
+            ]
+
+    # Default channels if channels.yml doesn't exist
+    return [
+        Channel(
+            name="Lenny's Podcast",
+            channel_id="UC6t1O76G0jYXOAoYCm153dA"
+        ),
+        Channel(
+            name="SVPG - Marty Cagan",
+            channel_id="UCub3-8xH-nLcp-EeV2htn7w"
+        ),
+        Channel(
+            name="Aakash Gupta - Product Growth",
+            channel_id="UCsHBhXybRz2CCfpU0hWp7ow"
+        ),
+        Channel(
+            name="Greg Isenberg",
+            channel_id="UCPjNBjflYl0-HQtUvOx0Ibw"
+        ),
+        Channel(
+            name="Pragmatic Engineer",
+            channel_id="UCPbwhExawYrn9xxI21TFfyw"
+        ),
+        Channel(
+            name="Mind the Product",
+            channel_id="UCiT1BmYvOBsEvU9iw0076Sw"
+        ),
+    ]
+
+CHANNELS = load_channels()
 
 # How far back to look for new videos (in hours)
 # Set to 168 (7 days) for testing, reduce to 24 for daily runs
