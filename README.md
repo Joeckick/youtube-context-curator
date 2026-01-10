@@ -139,6 +139,11 @@ With this context, a video about "running a product strategy offsite" doesn't ju
 
 With this context, a video about "delegation for engineering managers" gets rated Medium (you're not fully a manager yet) with specific notes on which parts apply to your hybrid IC/lead role.
 
+## Requirements
+
+- **Python 3.9 or higher** (uses modern type hints like `list[str]`)
+- API keys for AI analysis, transcripts, and email (see below)
+
 ## Setup
 
 ```bash
@@ -219,6 +224,17 @@ That's it. You'll get your first digest tomorrow morning.
 | GPT-4o | ~£0.01-0.02 | ~£8/month |
 
 Supadata and Resend free tiers are plenty for personal use.
+
+## Development
+
+To run tests and linting:
+
+```bash
+pip install -r requirements-dev.txt
+pytest                    # Run tests
+ruff check .              # Linting
+black --check .           # Formatting
+```
 
 ## Troubleshooting
 
