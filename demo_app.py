@@ -8,9 +8,9 @@ Run locally: streamlit run demo_app.py
 Deploy free: streamlit.io/cloud
 """
 
-import streamlit as st
 import anthropic
 import openai
+import streamlit as st
 
 # Sample transcript (same as sample_transcript.txt)
 SAMPLE_TRANSCRIPT = """Welcome back to the show. Today we're talking about something that I think is really underrated in product management, which is the skill of developing product intuition.
@@ -117,144 +117,151 @@ TRANSCRIPT:
 def analyse_with_anthropic(api_key: str, context: str, transcript: str) -> str:
     """Send transcript to Claude for analysis."""
     client = anthropic.Anthropic(api_key=api_key)
-    
+
     message = client.messages.create(
         model="claude-sonnet-4-5-20250929",
         max_tokens=2000,
         system=get_system_prompt(context),
         messages=[
             {
-                "role": "user", 
+                "role": "user",
                 "content": get_analysis_prompt(
-                    "How to develop product intuition",
-                    "Lenny's Podcast"
-                ) + transcript
+                    "How to develop product intuition", "Lenny's Podcast"
+                )
+                + transcript,
             }
-        ]
+        ],
     )
-    
+
     return message.content[0].text
 
 
 def analyse_with_openai(api_key: str, context: str, transcript: str) -> str:
     """Send transcript to GPT for analysis."""
     client = openai.OpenAI(api_key=api_key)
-    
+
     response = client.chat.completions.create(
         model="gpt-4o",
         max_tokens=2000,
         messages=[
+            {"role": "system", "content": get_system_prompt(context)},
             {
-                "role": "system",
-                "content": get_system_prompt(context)
-            },
-            {
-                "role": "user", 
+                "role": "user",
                 "content": get_analysis_prompt(
-                    "How to develop product intuition",
-                    "Lenny's Podcast"
-                ) + transcript
-            }
-        ]
+                    "How to develop product intuition", "Lenny's Podcast"
+                )
+                + transcript,
+            },
+        ],
     )
-    
+
     return response.choices[0].message.content
 
 
 # Streamlit UI
-st.set_page_config(
-    page_title="YouTube Digest Demo",
-    page_icon="📺",
-    layout="wide"
-)
+st.set_page_config(page_title="YouTube Digest Demo", page_icon="📺", layout="wide")
 
 st.title("📺 YouTube Digest Demo")
-st.markdown("""
+st.markdown(
+    """
 See how YouTube Digest filters content based on *your* context.
 
 This demo analyses a sample video transcript against your situation and goals,
 showing you exactly what a daily digest would look like.
-""")
+"""
+)
 
 # Privacy notice
-st.info("""
-🔒 **Privacy:** Your context is processed in memory only and sent directly to the AI API. 
+st.info(
+    """
+🔒 **Privacy:** Your context is processed in memory only and sent directly to the AI API.
 Nothing is stored, logged, or saved. You provide your own API key.
-""")
+"""
+)
 
 # Two columns
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Your API Key")
-    
+
     provider = st.radio(
-        "Choose provider",
-        ["Anthropic (Claude)", "OpenAI (GPT-4o)"],
-        horizontal=True
+        "Choose provider", ["Anthropic (Claude)", "OpenAI (GPT-4o)"], horizontal=True
     )
-    
+
     if provider == "Anthropic (Claude)":
         api_key = st.text_input(
             "Anthropic API Key",
             type="password",
             placeholder="sk-ant-...",
-            help="Get one at console.anthropic.com"
+            help="Get one at console.anthropic.com",
         )
     else:
         api_key = st.text_input(
             "OpenAI API Key",
             type="password",
             placeholder="sk-...",
-            help="Get one at platform.openai.com"
+            help="Get one at platform.openai.com",
         )
-    
+
     st.subheader("Your Context")
     st.markdown("*Edit this to match your situation:*")
     context = st.text_area(
-        "Context",
-        value=SAMPLE_CONTEXT,
-        height=400,
-        label_visibility="collapsed"
+        "Context", value=SAMPLE_CONTEXT, height=400, label_visibility="collapsed"
     )
 
 with col2:
     st.subheader("Sample Video")
-    st.markdown("""
-    **"How to develop product intuition"**  
+    st.markdown(
+        """
+    **"How to develop product intuition"**
     *Lenny's Podcast*
-    """)
-    
+    """
+    )
+
     with st.expander("View transcript"):
         st.text(SAMPLE_TRANSCRIPT)
-    
+
     st.subheader("Analysis")
-    
+
     if st.button("🔍 Analyse Video", type="primary", use_container_width=True):
         if not api_key:
-            st.error(f"Please enter your {'Anthropic' if 'Anthropic' in provider else 'OpenAI'} API key")
+            st.error(
+                f"Please enter your {'Anthropic' if 'Anthropic' in provider else 'OpenAI'} API key"
+            )
         elif not context.strip():
             st.error("Please enter your context")
         else:
             with st.spinner("Analysing..."):
                 try:
                     if "Anthropic" in provider:
-                        result = analyse_with_anthropic(api_key, context, SAMPLE_TRANSCRIPT)
+                        result = analyse_with_anthropic(
+                            api_key, context, SAMPLE_TRANSCRIPT
+                        )
                     else:
-                        result = analyse_with_openai(api_key, context, SAMPLE_TRANSCRIPT)
+                        result = analyse_with_openai(
+                            api_key, context, SAMPLE_TRANSCRIPT
+                        )
                     st.markdown(result)
                 except anthropic.AuthenticationError:
-                    st.error("Invalid Anthropic API key. Check your key at console.anthropic.com")
+                    st.error(
+                        "Invalid Anthropic API key. Check your key at console.anthropic.com"
+                    )
                 except openai.AuthenticationError:
-                    st.error("Invalid OpenAI API key. Check your key at platform.openai.com")
+                    st.error(
+                        "Invalid OpenAI API key. Check your key at platform.openai.com"
+                    )
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
     else:
-        st.markdown("*Click 'Analyse Video' to see how this video would be rated for you.*")
+        st.markdown(
+            "*Click 'Analyse Video' to see how this video would be rated for you.*"
+        )
 
 st.divider()
 
-st.markdown("""
+st.markdown(
+    """
 ### Want this as a daily email?
 
 YouTube Digest monitors your favourite channels and sends you a personalised digest every morning.
@@ -262,4 +269,5 @@ YouTube Digest monitors your favourite channels and sends you a personalised dig
 **[Get the code on GitHub →](https://github.com/joewapshott/youtube-digest)**
 
 Setup takes 10 minutes. Runs free on GitHub Actions.
-""")
+"""
+)
