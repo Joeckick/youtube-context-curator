@@ -159,6 +159,15 @@ python setup.py
 
 The setup wizard guides you through creating your context file and configuring API keys.
 
+### Manual setup (alternative to wizard)
+
+If you prefer to configure manually instead of using the wizard:
+
+1. Copy `.env.example` to `.env`
+2. Copy `context.example.md` to `context.md`
+3. Fill in your API keys in `.env`
+4. Edit `context.md` with your personal context
+
 ### API keys you'll need
 
 | Service | Purpose | Free tier |
