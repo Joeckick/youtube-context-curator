@@ -17,6 +17,7 @@ This tool is a filter that finds what's relevant and a translator that turns gen
 It monitors your channels and sends a daily email rating each video against your context, so you know what to watch and what to skip.
 
 ### High relevance videos get personalised insights
+Example content: Senior PM aiming for Head of Product
 
 ![High relevance example - Impact-First Product Teams](assets/high-relevance-1.png)
 
