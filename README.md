@@ -191,7 +191,7 @@ For engineers:
 ## Running
 
 ```bash
-python main.py --demo      # Test with sample data (just needs AI key)
+python main.py --dry-run   # Process real videos, print to console (no email sent)
 python main.py --dry-run   # Process real videos, print to console
 python main.py             # Full run: process and send email
 ```

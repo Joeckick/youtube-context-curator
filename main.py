@@ -8,32 +8,26 @@ Usage:
     python main.py              # Run the full digest pipeline
     python main.py --dry-run    # Run without sending email (prints to console)
     python main.py --test-email # Send a test email to verify configuration
-    python main.py --demo       # Run with sample data (only needs one AI API key)
 
 Environment variables required:
     ANTHROPIC_API_KEY or OPENAI_API_KEY - At least one AI provider key
-    SUPADATA_API_KEY    - For fetching transcripts (not needed for --demo)
-    RESEND_API_KEY      - For sending emails (not needed for --demo or --dry-run)
-    EMAIL_TO            - Recipient email address (not needed for --demo or --dry-run)
+    SUPADATA_API_KEY    - For fetching transcripts
+    RESEND_API_KEY      - For sending emails (not needed for --dry-run)
+    EMAIL_TO            - Recipient email address (not needed for --dry-run)
 """
 
 import argparse
 import logging
 import sys
 from datetime import datetime
-from pathlib import Path
 
 from analysis import (
     Analysis,
-    analyse_video,
     analyse_videos,
     get_anthropic_credit_balance,
 )
 from config import (
-    AI_PROVIDER,
-    ANTHROPIC_API_KEY,
     CHANNELS,
-    OPENAI_API_KEY,
     validate_config,
 )
 from email_sender import send_digest
@@ -46,93 +40,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
-
-
-def run_demo() -> int:
-    """
-    Run a demo with sample data to show what the digest looks like.
-    Only requires one AI API key (Anthropic or OpenAI).
-
-    Returns:
-        Exit code (0 for success, 1 for failure)
-    """
-    logger.info("=" * 60)
-    logger.info("YouTube Digest - DEMO MODE")
-    logger.info("=" * 60)
-
-    if not ANTHROPIC_API_KEY and not OPENAI_API_KEY:
-        logger.error("No AI API key set")
-        logger.error(
-            "Set ANTHROPIC_API_KEY (console.anthropic.com) or OPENAI_API_KEY (platform.openai.com)"
-        )
-        return 1
-
-    provider_name = "Claude" if AI_PROVIDER == "anthropic" else "GPT"
-    logger.info(f"Using {provider_name} for analysis")
-
-    # Load sample transcript
-    sample_transcript_path = Path(__file__).parent / "sample_transcript.txt"
-    if not sample_transcript_path.exists():
-        logger.error("sample_transcript.txt not found")
-        return 1
-
-    sample_transcript = sample_transcript_path.read_text()
-
-    # Create a fake video with the sample transcript
-    demo_video = Video(
-        video_id="demo123",
-        title="How to develop product intuition",
-        channel_name="Lenny's Podcast",
-        published=datetime.now(),
-        url="https://www.youtube.com/watch?v=demo123",
-        transcript=sample_transcript,
-    )
-
-    logger.info(f"Analysing sample video: {demo_video.title}")
-    logger.info("(Using context.sample.md for demo)")
-
-    # Temporarily override context loading to use sample
-    import config
-
-    original_load = config.load_user_context
-
-    def load_sample_context():
-        sample_path = Path(__file__).parent / "context.sample.md"
-        if sample_path.exists():
-            return sample_path.read_text()
-        raise FileNotFoundError("context.sample.md not found")
-
-    config.load_user_context = load_sample_context
-
-    try:
-        # Analyse the demo video
-        analysis = analyse_video(demo_video)
-
-        print("\n" + "=" * 60)
-        print("DEMO OUTPUT - This is what your daily digest would look like")
-        print("=" * 60)
-        print(f"\n📺 {demo_video.title}")
-        print(f"   {demo_video.channel_name}")
-        print(f"   {demo_video.url}")
-        print("\n" + "-" * 60)
-
-        if analysis.success:
-            print(analysis.analysis_text)
-        else:
-            print(f"Error: {analysis.error}")
-
-        print("\n" + "=" * 60)
-        print("To get your own personalised digest:")
-        print("1. Copy context.example.md to context.md")
-        print("2. Edit context.md with your situation and goals")
-        print("3. Set up API keys (see README.md)")
-        print("4. Run: python main.py --dry-run")
-        print("=" * 60)
-
-    finally:
-        config.load_user_context = original_load
-
-    return 0
 
 
 def run_digest(dry_run: bool = False) -> int:
@@ -288,17 +195,10 @@ def main():
         action="store_true",
         help="Send a test email to verify configuration",
     )
-    parser.add_argument(
-        "--demo",
-        action="store_true",
-        help="Run with sample data (only needs ANTHROPIC_API_KEY)",
-    )
 
     args = parser.parse_args()
 
-    if args.demo:
-        sys.exit(run_demo())
-    elif args.test_email:
+    if args.test_email:
         sys.exit(send_test_email())
     else:
         sys.exit(run_digest(dry_run=args.dry_run))
