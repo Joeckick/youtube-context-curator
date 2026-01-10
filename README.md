@@ -12,7 +12,7 @@ You know there's content in there that could help you work better, stay current,
 
 This isn't a youtube summariser. There's hundreds of those.
 
-This tool is a a filter that finds what's relevant and a translator that turns generic advice into specific action.
+This tool is a filter that finds what's relevant and a translator that turns generic advice into specific action.
 
 It monitors your channels and sends a daily email rating each video against your context, so you know what to watch and what to skip.
 
