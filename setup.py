@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""
+Interactive setup script for YouTube Digest.
+
+Run this after cloning to get up and running quickly:
+    python setup.py
+"""
+
+import os
+import shutil
+from pathlib import Path
+
+
+def print_header(text: str) -> None:
+    """Print a section header."""
+    print(f"\n{'='*50}")
+    print(f"  {text}")
+    print(f"{'='*50}\n")
+
+
+def print_step(step: int, total: int, text: str) -> None:
+    """Print a step indicator."""
+    print(f"\n[{step}/{total}] {text}")
+    print("-" * 40)
+
+
+def copy_if_missing(src: str, dest: str, description: str) -> bool:
+    """Copy a file if the destination doesn't exist. Returns True if copied."""
+    src_path = Path(src)
+    dest_path = Path(dest)
+
+    if dest_path.exists():
+        print(f"  ✓ {description} already exists")
+        return False
+
+    if not src_path.exists():
+        print(f"  ✗ Error: {src} not found")
+        return False
+
+    shutil.copy(src_path, dest_path)
+    print(f"  ✓ Created {description}")
+    return True
+
+
+def prompt_for_key(name: str, description: str, signup_url: str, prefix: str = "") -> str:
+    """Prompt user for an API key with helpful context."""
+    print(f"\n  {name}")
+    print(f"  {description}")
+    print(f"  Sign up: {signup_url}")
+    if prefix:
+        print(f"  (starts with '{prefix}')")
+
+    while True:
+        value = input(f"  Enter {name} (or press Enter to skip): ").strip()
+        if not value:
+            return ""
+        if prefix and not value.startswith(prefix):
+            print(f"  Warning: Expected key to start with '{prefix}'. Try again or press Enter to skip.")
+            continue
+        return value
+
+
+def setup_env_file() -> dict:
+    """Set up the .env file interactively. Returns the configured values."""
+    env_path = Path(".env")
+    values = {}
+
+    # Load existing values if .env exists
+    if env_path.exists():
+        print("  Found existing .env file, loading current values...")
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, _, value = line.partition("=")
+                    values[key.strip()] = value.strip()
+
+    print("\n  Let's configure your API keys.")
+    print("  You can skip any key and add it later by editing .env")
+
+    # AI Provider (need at least one)
+    print("\n  --- AI Provider (need at least one) ---")
+
+    if not values.get("ANTHROPIC_API_KEY") or values.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-api..."):
+        key = prompt_for_key(
+            "ANTHROPIC_API_KEY",
+            "Claude API for video analysis (recommended)",
+            "https://console.anthropic.com",
+            "sk-ant-"
+        )
+        if key:
+            values["ANTHROPIC_API_KEY"] = key
+    else:
+        print(f"\n  ANTHROPIC_API_KEY: ✓ Already configured")
+
+    if not values.get("OPENAI_API_KEY") or values.get("OPENAI_API_KEY", "") == "":
+        key = prompt_for_key(
+            "OPENAI_API_KEY",
+            "OpenAI API (alternative to Anthropic)",
+            "https://platform.openai.com",
+            "sk-"
+        )
+        if key:
+            values["OPENAI_API_KEY"] = key
+    else:
+        print(f"\n  OPENAI_API_KEY: ✓ Already configured")
+
+    # Supadata
+    print("\n  --- Transcript API ---")
+    if not values.get("SUPADATA_API_KEY") or values.get("SUPADATA_API_KEY", "").startswith("your-"):
+        key = prompt_for_key(
+            "SUPADATA_API_KEY",
+            "For fetching YouTube transcripts (free tier: 200/month)",
+            "https://supadata.ai",
+        )
+        if key:
+            values["SUPADATA_API_KEY"] = key
+    else:
+        print(f"\n  SUPADATA_API_KEY: ✓ Already configured")
+
+    # Email
+    print("\n  --- Email (via Resend) ---")
+    if not values.get("RESEND_API_KEY") or values.get("RESEND_API_KEY", "").startswith("re_..."):
+        key = prompt_for_key(
+            "RESEND_API_KEY",
+            "For sending digest emails (free tier: 3,000/month)",
+            "https://resend.com",
+            "re_"
+        )
+        if key:
+            values["RESEND_API_KEY"] = key
+    else:
+        print(f"\n  RESEND_API_KEY: ✓ Already configured")
+
+    if not values.get("EMAIL_TO") or values.get("EMAIL_TO", "") == "your.email@example.com":
+        print(f"\n  EMAIL_TO")
+        print(f"  Where to send your daily digest")
+        email = input(f"  Enter your email address: ").strip()
+        if email:
+            values["EMAIL_TO"] = email
+    else:
+        print(f"\n  EMAIL_TO: ✓ Already configured ({values.get('EMAIL_TO')})")
+
+    # Set default EMAIL_FROM if not set
+    if "EMAIL_FROM" not in values:
+        values["EMAIL_FROM"] = "YouTube Digest <onboarding@resend.dev>"
+
+    # Write .env file
+    with open(env_path, "w") as f:
+        f.write("# YouTube Digest Configuration\n")
+        f.write("# Generated by setup.py\n\n")
+
+        f.write("# AI Provider - need at least one\n")
+        f.write(f"ANTHROPIC_API_KEY={values.get('ANTHROPIC_API_KEY', '')}\n")
+        f.write(f"OPENAI_API_KEY={values.get('OPENAI_API_KEY', '')}\n\n")
+
+        f.write("# Transcript API\n")
+        f.write(f"SUPADATA_API_KEY={values.get('SUPADATA_API_KEY', '')}\n\n")
+
+        f.write("# Email configuration\n")
+        f.write(f"RESEND_API_KEY={values.get('RESEND_API_KEY', '')}\n")
+        f.write(f"EMAIL_FROM={values.get('EMAIL_FROM', '')}\n")
+        f.write(f"EMAIL_TO={values.get('EMAIL_TO', '')}\n")
+
+    print("\n  ✓ Saved .env file")
+    return values
+
+
+def validate_setup() -> list[str]:
+    """Check if the setup is complete. Returns list of issues."""
+    issues = []
+
+    # Check context.md
+    if not Path("context.md").exists():
+        issues.append("context.md not created - copy context.example.md and add your details")
+
+    # Check .env
+    if not Path(".env").exists():
+        issues.append(".env file not created")
+        return issues
+
+    # Load and check .env values
+    values = {}
+    with open(".env") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                values[key.strip()] = value.strip()
+
+    # Need at least one AI provider
+    has_anthropic = values.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-")
+    has_openai = values.get("OPENAI_API_KEY", "").startswith("sk-")
+    if not has_anthropic and not has_openai:
+        issues.append("No AI API key configured - need ANTHROPIC_API_KEY or OPENAI_API_KEY")
+
+    if not values.get("SUPADATA_API_KEY"):
+        issues.append("SUPADATA_API_KEY not set - needed for transcripts")
+
+    if not values.get("RESEND_API_KEY") or not values.get("RESEND_API_KEY", "").startswith("re_"):
+        issues.append("RESEND_API_KEY not set - needed for email delivery")
+
+    if not values.get("EMAIL_TO") or values.get("EMAIL_TO") == "your.email@example.com":
+        issues.append("EMAIL_TO not set - where should we send your digest?")
+
+    return issues
+
+
+def main():
+    """Run the setup wizard."""
+    print_header("YouTube Digest Setup")
+    print("This will help you get set up in a few minutes.")
+    print("You can re-run this script anytime to update your configuration.")
+
+    base_dir = Path(__file__).parent
+    os.chdir(base_dir)
+
+    total_steps = 3
+
+    # Step 1: Create context.md
+    print_step(1, total_steps, "Personal Context")
+    created = copy_if_missing("context.example.md", "context.md", "context.md")
+    if created:
+        print("\n  IMPORTANT: Edit context.md with your details!")
+        print("  The more specific you are, the better the filtering.")
+        print("  Open it now: context.md")
+
+    # Step 2: Configure API keys
+    print_step(2, total_steps, "API Keys")
+    setup_env_file()
+
+    # Step 3: Validate
+    print_step(3, total_steps, "Validation")
+    issues = validate_setup()
+
+    if issues:
+        print("\n  Setup incomplete. Please fix these issues:\n")
+        for issue in issues:
+            print(f"  ✗ {issue}")
+        print("\n  Run 'python setup.py' again after fixing these.")
+    else:
+        print("\n  ✓ All configuration looks good!")
+
+    # Next steps
+    print_header("Next Steps")
+
+    if Path("context.md").exists():
+        # Check if context.md is still the template
+        with open("context.md") as f:
+            content = f.read()
+        if "[e.g." in content or "delete this section" in content.lower():
+            print("1. Edit context.md with YOUR details (this is the most important step!)")
+            print("   The example content is still there - replace it with your situation.\n")
+
+    print("2. Test your setup:")
+    print("   python main.py --demo      # Test with sample data (just needs AI key)")
+    print("   python main.py --dry-run   # Test with real videos (needs all keys)\n")
+
+    print("3. When ready, run the full digest:")
+    print("   python main.py\n")
+
+    print("4. For daily automation, see README.md for GitHub Actions setup.\n")
+
+
+if __name__ == "__main__":
+    main()

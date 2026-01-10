@@ -50,17 +50,16 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Set up your context
-cp context.example.md context.md
-# Edit context.md with your situation, goals, and interests
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your API keys
-
-# Test it
-python main.py --dry-run
+# Run the setup wizard
+python setup.py
 ```
+
+The setup wizard will:
+1. Create your `context.md` file (edit this with your details)
+2. Guide you through configuring API keys
+3. Validate your setup
+
+After running the wizard, edit `context.md` with your situation - this is where the magic happens.
 
 ## Configuration
 
