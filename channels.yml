@@ -1,0 +1,31 @@
+# YouTube channels to monitor
+#
+# Add or remove channels here. Each channel needs:
+#   - name: Display name (shown in your digest)
+#   - id: YouTube channel ID
+#
+# To find a channel ID:
+#   1. Go to the channel page on YouTube
+#   2. View page source (Ctrl+U / Cmd+U)
+#   3. Search for "channel_id" - you'll find "channel_id":"UC..."
+#
+# Or use: https://commentpicker.com/youtube-channel-id.php
+
+channels:
+  - name: "Lenny's Podcast"
+    id: UC6t1O76G0jYXOAoYCm153dA
+
+  - name: "SVPG - Marty Cagan"
+    id: UCub3-8xH-nLcp-EeV2htn7w
+
+  - name: "Aakash Gupta - Product Growth"
+    id: UCsHBhXybRz2CCfpU0hWp7ow
+
+  - name: "Greg Isenberg"
+    id: UCPjNBjflYl0-HQtUvOx0Ibw
+
+  - name: "Pragmatic Engineer"
+    id: UCPbwhExawYrn9xxI21TFfyw
+
+  - name: "Mind the Product"
+    id: UCiT1BmYvOBsEvU9iw0076Sw
