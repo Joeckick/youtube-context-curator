@@ -89,7 +89,8 @@ def get_new_videos(
     for entry in feed.entries:
         # Parse published date
         try:
-            published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+            parsed = entry.published_parsed[:6]
+            published = datetime(*parsed).replace(tzinfo=timezone.utc)
         except (AttributeError, TypeError) as e:
             logger.warning(
                 f"Could not parse date for {entry.get('title', 'unknown')}: {e}"
