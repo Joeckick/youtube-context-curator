@@ -55,15 +55,7 @@ For each video you get:
 - A short summary
 - For relevant videos: the "so what" - how this connects to your goals and what you might do with it
 
-## The "Skip" rating is the point
 
-Knowing with confidence that a video isn't relevant to your situation is just as valuable as finding one that is. No more wondering if you're missing something important.
-
-A video about "building executive presence" might be:
-- **Skip** for an engineer who's happy as an IC
-- **High** for a PM trying to get promoted, with specific suggestions on how to apply the advice in their upcoming strategy presentation
-
-Same video. Different context. Different rating. Different action.
 
 ## Your context file
 
