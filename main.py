@@ -166,9 +166,9 @@ def run_digest(dry_run: bool = False) -> int:
         if not dry_run:
             # Still send an email to confirm the system is working
             credit_balance = get_anthropic_credit_balance()
-            success, error = send_digest([], credit_balance)
+            success, send_error = send_digest([], credit_balance)
             if not success:
-                logger.error(f"Failed to send digest: {error}")
+                logger.error(f"Failed to send digest: {send_error}")
                 return 1
         logger.info("Digest complete.")
         return 0
@@ -200,8 +200,9 @@ def run_digest(dry_run: bool = False) -> int:
         print("=" * 60)
 
         for analysis in analyses:
+            analysis_text = analysis.analysis_text or ""
             print(
-                f"\n{'🔥' if 'high' in analysis.analysis_text.lower()[:100] else '📺'} {analysis.video.title}"
+                f"\n{'🔥' if 'high' in analysis_text.lower()[:100] else '📺'} {analysis.video.title}"
             )
             print(f"   {analysis.video.channel_name} | {analysis.video.url}")
             print("-" * 60)
@@ -216,9 +217,9 @@ def run_digest(dry_run: bool = False) -> int:
         print("=" * 60)
     else:
         logger.info("Step 4: Sending digest email...")
-        success, error = send_digest(analyses, credit_balance)
+        success, send_error = send_digest(analyses, credit_balance)
         if not success:
-            logger.error(f"Failed to send digest: {error}")
+            logger.error(f"Failed to send digest: {send_error}")
             return 1
 
     logger.info("=" * 60)
@@ -263,13 +264,13 @@ def send_test_email() -> int:
     if credit_balance:
         logger.info(f"Anthropic credit balance: {credit_balance}")
 
-    success, error = send_digest([test_analysis], credit_balance)
+    success, send_error = send_digest([test_analysis], credit_balance)
 
     if success:
         logger.info("Test email sent successfully!")
         return 0
     else:
-        logger.error(f"Failed to send test email: {error}")
+        logger.error(f"Failed to send test email: {send_error}")
         return 1
 
 

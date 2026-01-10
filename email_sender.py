@@ -166,10 +166,15 @@ def _group_by_rating(analyses: list[Analysis]) -> dict[str, list[Analysis]]:
 
     Extracts the rating from the analysis text and groups accordingly.
     """
-    grouped = {"high": [], "medium": [], "low": [], "skip": []}
+    grouped: dict[str, list[Analysis]] = {
+        "high": [],
+        "medium": [],
+        "low": [],
+        "skip": [],
+    }
 
     for analysis in analyses:
-        rating = "skip"  # Default if we can't parse
+        rating: str = "skip"  # Default if we can't parse
 
         if analysis.analysis_text:
             # Look for "**Relevance:** High" or similar patterns

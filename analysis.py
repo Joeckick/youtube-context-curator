@@ -107,7 +107,10 @@ def _analyse_with_anthropic(transcript: str, user_prompt: str) -> str:
         messages=[{"role": "user", "content": user_prompt}],
     )
 
-    return message.content[0].text
+    content_block = message.content[0]
+    if hasattr(content_block, "text"):
+        return content_block.text
+    return str(content_block)
 
 
 def _analyse_with_openai(transcript: str, user_prompt: str) -> str:
@@ -123,7 +126,7 @@ def _analyse_with_openai(transcript: str, user_prompt: str) -> str:
         ],
     )
 
-    return response.choices[0].message.content
+    return response.choices[0].message.content or ""
 
 
 def analyse_video(video: Video) -> Analysis:
