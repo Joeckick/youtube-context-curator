@@ -200,16 +200,14 @@ channels:
 **Some suggestions to get you started:**
 
 For product managers:
-- Lenny's Podcast (@LennysPodcast)
-- Product School (@ProductSchoolSF)
-- Mind the Product (@MindTheProduct)
-- The Product Podcast (@TheProductPodcast)
+- Lenny's Podcast (@LennysPodcast) - ID UC6t1O76G0jYXOAoYCm153dA
+- Product School (@ProductSchoolSanFrancisco) - ID UC6hlQ0x6kPbAGjYkoz53cvA
+- Mind the Product (@MindTheProductTV) - ID UCiT1BmYvOBsEvU9iw0076Sw
 
 For engineers:
-- Pragmatic Engineer (@mrgergelyorosz)
-- LeadDev (@TheLeadDev)
-- Continuous Delivery (@ContinuousDelivery)
-- ThePrimeagen (@ThePrimeTimeagen)
+- Pragmatic Engineer (@mrgergelyorosz) - ID UCPbwhExawYrn9xxI21TFfyw
+- LeadDev (@TheLeadDev) - ID UCmM3eCpmWKLJj2PDW_jdGkg
+- ThePrimeagen (@ThePrimeTimeagen) - ID UCUyeluBRhGPCW4rPe_UvBZQ
 
 **To find a channel ID:** Go to the channel page, view source, and search for `channel_id`. Or use a tool like [commentpicker.com/youtube-channel-id.php](https://commentpicker.com/youtube-channel-id.php) - paste the channel URL and it gives you the ID.
 
