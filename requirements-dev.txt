@@ -1,0 +1,21 @@
+# Development dependencies
+# Install with: pip install -r requirements-dev.txt
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=4.1.0
+
+# Code formatting
+black>=24.0.0
+
+# Linting
+ruff>=0.3.0
+
+# Type checking
+mypy>=1.8.0
+
+# Pre-commit hooks
+pre-commit>=3.6.0
+
+# Type stubs for dependencies
+types-requests>=2.31.0
