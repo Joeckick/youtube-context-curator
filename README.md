@@ -196,10 +196,17 @@ For engineers:
 ## Running
 
 ```bash
+# First, verify your configuration
 python main.py --dry-run    # Process videos, print to console (no email sent)
+
+# Once verified, run the full digest
 python main.py              # Full run: process videos and send email
-python main.py --test-email # Send a test email to verify configuration
+
+# Or test email delivery only
+python main.py --test-email # Send a test email to verify email config
 ```
+
+**Note:** `--dry-run` still requires valid API keys (ANTHROPIC/OPENAI and SUPADATA) to analyze videos. It only skips sending the email.
 
 ## Deployment (one-time setup, daily value)
 
