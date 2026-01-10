@@ -276,8 +276,8 @@ def main():
             )
 
     print("2. Test your setup:")
-    print("   python main.py --dry-run   # Process videos, print to console (no email)")
-    print("   python main.py --dry-run   # Test with real videos (needs all keys)\n")
+    print("   python main.py --dry-run    # Process videos, print to console (no email)")
+    print("   python main.py --test-email # Send a test email to verify config\n")
 
     print("3. When ready, run the full digest:")
     print("   python main.py\n")

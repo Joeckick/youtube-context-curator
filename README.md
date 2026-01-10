@@ -191,9 +191,9 @@ For engineers:
 ## Running
 
 ```bash
-python main.py --dry-run   # Process real videos, print to console (no email sent)
-python main.py --dry-run   # Process real videos, print to console
-python main.py             # Full run: process and send email
+python main.py --dry-run    # Process videos, print to console (no email sent)
+python main.py              # Full run: process videos and send email
+python main.py --test-email # Send a test email to verify configuration
 ```
 
 ## Deployment (one-time setup, daily value)
