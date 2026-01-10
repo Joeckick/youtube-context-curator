@@ -267,7 +267,7 @@ def main():
         # Check if context.md is still the template
         with open("context.md") as f:
             content = f.read()
-        if "[e.g." in content or "delete this section" in content.lower():
+        if "[Your job title" in content or "[Current project" in content:
             print(
                 "1. Edit context.md with YOUR details (this is the most important step!)"
             )
