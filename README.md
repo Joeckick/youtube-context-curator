@@ -4,7 +4,7 @@
 
 You're a Product Manager who subscribes to Lenny's Podcast, The Product Podcast, Product Growth and a dozen other sources to keep up to date with the industry.
 
-Or an engineer who's trying to stay on top of all the latest developments with AI, and which ones you should / shouldn't employ.
+Or an Engineer who's trying to stay on top of all the latest developments with AI, and which ones you should / shouldn't employ.
 
 You know there's content in there that could help you work better, stay current, or get to the next level. You just don't know which specific videos, when they're pushing out 3 a week.
 
