@@ -276,7 +276,7 @@ def main():
             )
 
     print("2. Test your setup:")
-    print("   python main.py --demo      # Test with sample data (just needs AI key)")
+    print("   python main.py --dry-run   # Process videos, print to console (no email)")
     print("   python main.py --dry-run   # Test with real videos (needs all keys)\n")
 
     print("3. When ready, run the full digest:")
