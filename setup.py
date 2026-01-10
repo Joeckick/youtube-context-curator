@@ -42,6 +42,24 @@ def copy_if_missing(src: str, dest: str, description: str) -> bool:
     return True
 
 
+def is_placeholder_key(value: str) -> bool:
+    """Check if a key looks like a placeholder/test value."""
+    placeholder_patterns = [
+        "placeholder",
+        "test",
+        "example",
+        "demo",
+        "fake",
+        "dummy",
+        "xxx",
+        "your-",
+        "insert",
+        "replace",
+    ]
+    lower_value = value.lower()
+    return any(pattern in lower_value for pattern in placeholder_patterns)
+
+
 def prompt_for_key(
     name: str, description: str, signup_url: str, prefix: str = ""
 ) -> str:
@@ -61,6 +79,11 @@ def prompt_for_key(
                 f"  Warning: Expected key to start with '{prefix}'. Try again or press Enter to skip."
             )
             continue
+        if is_placeholder_key(value):
+            print(
+                "  Note: This looks like a placeholder key. You'll need a real API key"
+            )
+            print("  to run the tool. Get one from the signup URL above.")
         return value
 
 
@@ -204,11 +227,21 @@ def validate_setup() -> list[str]:
                 values[key.strip()] = value.strip()
 
     # Need at least one AI provider
-    has_anthropic = values.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-")
-    has_openai = values.get("OPENAI_API_KEY", "").startswith("sk-")
+    anthropic_key = values.get("ANTHROPIC_API_KEY", "")
+    openai_key = values.get("OPENAI_API_KEY", "")
+    has_anthropic = anthropic_key.startswith("sk-ant-")
+    has_openai = openai_key.startswith("sk-")
     if not has_anthropic and not has_openai:
         issues.append(
             "No AI API key configured - need ANTHROPIC_API_KEY or OPENAI_API_KEY"
+        )
+    elif has_anthropic and is_placeholder_key(anthropic_key):
+        issues.append(
+            "ANTHROPIC_API_KEY looks like a placeholder - get a real key from console.anthropic.com"
+        )
+    elif has_openai and is_placeholder_key(openai_key):
+        issues.append(
+            "OPENAI_API_KEY looks like a placeholder - get a real key from platform.openai.com"
         )
 
     if not values.get("SUPADATA_API_KEY"):
