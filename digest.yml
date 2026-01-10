@@ -1,0 +1,48 @@
+name: YouTube Digest
+
+on:
+  schedule:
+    # Run at 8am UTC daily
+    # Adjust for your timezone: 8am GMT = 8am UTC in winter, 7am UTC in summer (BST)
+    - cron: '0 8 * * *'
+  
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Run digest
+        env:
+          # AI Provider - set at least one
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Optional: force provider (anthropic or openai)
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
+          # Required
+          SUPADATA_API_KEY: ${{ secrets.SUPADATA_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python main.py

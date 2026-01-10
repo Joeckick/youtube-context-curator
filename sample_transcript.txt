@@ -1,0 +1,23 @@
+Welcome back to the show. Today we're talking about something that I think is really underrated in product management, which is the skill of developing product intuition.
+
+So I've been thinking about this a lot lately because I see so many PMs who are really good at the process side of things - they can run a sprint, they can write a spec, they can manage stakeholders - but they struggle with the fundamental question of "what should we build?"
+
+And I think the reason is that product intuition isn't taught. It's this thing that people assume you either have or you don't. But I actually think it's a skill that can be developed.
+
+So let me share three ways that I've seen great PMs develop their product intuition.
+
+The first one is customer exposure. And I don't mean reading research reports or looking at dashboards. I mean actually talking to customers regularly. The best PMs I know spend at least 4 hours a week in direct customer contact. They're doing support shifts, they're joining sales calls, they're running user interviews.
+
+And here's the key insight: they're not doing this to validate specific ideas. They're doing it to build a mental model of the customer. They want to be able to predict how a customer will react to something before they even test it.
+
+The second way is studying other products obsessively. Great PMs are constantly signing up for new products, going through onboarding flows, analysing pricing pages. They're building a library in their head of patterns that work and patterns that don't.
+
+I talked to a PM at Stripe recently who told me she signs up for at least 5 new products every week. Not because she needs them, but because she's studying them. She's looking at how they handle activation, how they communicate value, how they structure their pricing.
+
+The third way is making bets and tracking them. This is something I learned from a product leader at Airbnb. Every week, before they look at the data, they write down what they think happened and why. Then they compare their predictions to reality.
+
+Over time, this builds calibration. You start to notice where your intuition is strong and where it's weak. And that awareness is actually more valuable than being right all the time.
+
+So to summarise: customer exposure, studying other products, and making explicit predictions. These are the three ways I've seen PMs develop genuine product intuition.
+
+Now let me take some questions from the audience...
